@@ -64,13 +64,17 @@ html {
   border: none;
   background-color: transparent;
   padding-bottom: 10px;
-  border-bottom: 3px solid #002051;
+  /* border-bottom: 3px solid #002051; */
   margin: 10px 10px 0 10px;
 }
 
 .button:hover {
   color: #3742fa;
   border-bottom: 3px solid #3742fa;
+}
+
+.button:focus{
+  outline: none;
 }
 
 .quantity {
@@ -111,7 +115,7 @@ html {
 }
 
 .search__input:focus{
-    border: none;
+    outline: none;
 }
 
 .search__input::placeholder{
@@ -146,4 +150,8 @@ html {
 
 .element__number{
     font-weight: bold;
+}
+
+.hidden{
+  visibility: hidden;
 }

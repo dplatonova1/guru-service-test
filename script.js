@@ -1,5 +1,6 @@
 const container = document.querySelector('.container');
 const header = document.querySelector('header');
+let monthes;
 
 function convertDate(day){
     let date = new Date (day)
@@ -42,12 +43,12 @@ function convertMonth(mon) {
   }
 }
 
-function itemCreate(item) {
+function itemListCreate(items) {
+  container.innerHTML = '';
   const resultsCard = document.createElement("tbody");
   resultsCard.classList.add("element");
-  let values = Object.values(item);
   let template='';
-  for (let item of values) {
+  for (let item of items) {
     template =`<tr class="row"><td class="element__number">${item.number}</td>
     <td class="element__date">${convertDate(item.cdate)}</td></tr>`;
     resultsCard.insertAdjacentHTML('beforeend', template);
@@ -58,47 +59,60 @@ function itemCreate(item) {
 function monthCreate(item) {
   const monthButton = document.createElement("button");
   monthButton.classList.add("button");
+  let span = document.createElement('span')
+  span.classList.add('hidden')
+  span.textContent = item.alias;
   let month = convertMonth(item.alias);
   monthButton.textContent = `${month}`;
   const quantity = document.createElement("p");
   quantity.classList.add("quantity");
   quantity.textContent = `${Object.keys(item.number_list).length}`;
   monthButton.append(quantity);
-  itemCreate(item.number_list);
+  monthButton.append(span);
   return monthButton;
 }
 
-function createMonthList(array) {
-    let arr = Object.values(array);
-    for (let key of arr){
-        key.forEach(el=>{
-            let dateFrom = new Date(el.date_from);
-            let dateTo = new Date(el.date_to);
-            var options = { month: 'long'};
-            let monthDateFrom = new Intl.DateTimeFormat('en-US', options).format(dateFrom);
-            let monthDateTo = new Intl.DateTimeFormat('en-US', options).format(dateTo);//это сответствует лэйблам кнопок
-            if(el.is_visible){
-            const cardTemplate = monthCreate(el);
-            header.appendChild(cardTemplate);}
-        })
+function createMonthList(month_list) {
+    month_list.forEach((el) => {
+    if (el.is_visible) {
+      const cardTemplate = monthCreate(el);
+      header.appendChild(cardTemplate);
     }
+  });
+  if(month_list.length > 0){
+    itemListCreate(month_list[0].number_list);
   }
+}
 
-function filterMonthList(button, element){
-    console.log(button, element)
-    //если клик по кнопке с нужным alias - оставить только этот элемент массива
+function filterMonthList(month_name){
+    
+    let month = monthes.filter(x => x.alias == month_name)[0];
+    ///TO DO aфилтруй записи
+    let filtered = month.number_list;
+    return filtered;
 }
 
 
 
 fetch('numbers.json')
   .then(res => res.json()) 
-  .then(data => createMonthList(data))
+  .then(data => {
+        monthes = data.numbers;
+        for(let i=0; i<monthes.length;i++){
+            let month = monthes[i];
+            if(month.is_visible){
+                let number_list  =Object.values(month.number_list);
+                month.number_list = number_list;
+            }
+        }
+        createMonthList(monthes);
+    });
 
 
-document.addEventListener('click', (ev, data)=>{
+document.addEventListener('click', (ev)=>{
     if(ev.target.closest('button')){
-        filterMonthList(ev.target.closest('button'))
+        let month_name = ev.target.lastElementChild.textContent;
+        itemListCreate(filterMonthList(month_name));
     }
 })
 
