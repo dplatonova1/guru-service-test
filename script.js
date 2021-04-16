@@ -117,8 +117,9 @@ fetch('numbers.json')
     });
 
 
-document.addEventListener('click', (ev)=>{
+    header.addEventListener('click', (ev)=>{
     ev.preventDefault();
+    document.forms.search.elements.search.value='';
     if(ev.target.closest('button')){
         let month_name = ev.target.lastElementChild.textContent;
         current_month=month_name;
