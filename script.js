@@ -125,17 +125,12 @@ fetch('numbers.json')
         let month_name = ev.target.lastElementChild.textContent;
         current_month=month_name;
         itemListCreate(filterMonthList(month_name, 0));
-        let btns = ev.target.parentNode.children;
 
-        for (var i = 0; i < btns.length; i++) {
-            btns[i].addEventListener("click", function() {
-              var current = document.getElementsByClassName("active");
-              if (current.length > 0) {
-                current[0].className = current[0].className.replace(" active", "");
-              }
-              this.className += " active";
-            });
-          }
+        var current = document.getElementsByClassName("active");
+        if (current.length > 0) {
+          current[0].className = current[0].className.replace(" active", "");
+        }
+        ev.target.closest('button').className += " active";
     }
     
 })
