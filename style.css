@@ -73,6 +73,11 @@ html {
   border-bottom: 3px solid #3742fa;
 }
 
+.active{
+  color: #3742fa;
+  border-bottom: 3px solid #3742fa;
+}
+
 .button:focus{
   outline: none;
 }

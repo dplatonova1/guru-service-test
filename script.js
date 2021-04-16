@@ -1,5 +1,6 @@
 const container = document.querySelector('.container');
-const header = document.querySelector('header');
+const header = document.querySelector('.header');
+const searchInput = document.querySelector('.search__input');
 let monthes;
 
 function convertDate(day){
@@ -73,9 +74,9 @@ function monthCreate(item) {
 }
 
 function createMonthList(month_list) {
-    month_list.forEach((el) => {
-    if (el.is_visible) {
-      const cardTemplate = monthCreate(el);
+    month_list.forEach((month) => {
+    if (month.is_visible) {
+      const cardTemplate = monthCreate(month);
       header.appendChild(cardTemplate);
     }
   });
@@ -84,14 +85,35 @@ function createMonthList(month_list) {
   }
 }
 
-function filterMonthList(month_name){
-    
-    let month = monthes.filter(x => x.alias == month_name)[0];
-    ///TO DO aфилтруй записи
-    let filtered = month.number_list;
+function filterMonthList(month_name, parameter){ 
+    let month = monthes.filter(x => x[parameter] == month_name)[0]; //month это пачка данных одного месяца
+        //x[alias]=='jan'
+        //x[number]==inputvalue.includes or has
+    let filtered = month.number_list; //filtered это элементы намбер листа
     return filtered;
 }
 
+function search() {
+    // Declare variables
+    var input, filter, ul, li, a, i, txtValue;
+    input = document.forms.search.elements.search;
+    filter = input.value.toUpperCase();
+    // ul = document.querySelector("container");
+    li = container.querySelectorAll('.row');
+    console.log(document.forms.search.elements.search.textContent)
+  
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+        console.log(li[i])
+      a = li[i].getElementsByTagName("a")[0];
+      txtValue = a.textContent || a.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
+    }
+  }
 
 
 fetch('numbers.json')
@@ -101,7 +123,7 @@ fetch('numbers.json')
         for(let i=0; i<monthes.length;i++){
             let month = monthes[i];
             if(month.is_visible){
-                let number_list  =Object.values(month.number_list);
+                let number_list = Object.values(month.number_list);
                 month.number_list = number_list;
             }
         }
@@ -112,7 +134,39 @@ fetch('numbers.json')
 document.addEventListener('click', (ev)=>{
     if(ev.target.closest('button')){
         let month_name = ev.target.lastElementChild.textContent;
-        itemListCreate(filterMonthList(month_name));
+        itemListCreate(filterMonthList(month_name, 'alias'));
+        let btns = ev.target.parentNode.children;
+
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", function() {
+              var current = document.getElementsByClassName("active");
+              if (current.length > 0) {
+                current[0].className = current[0].className.replace(" active", "");
+              }
+              this.className += " active";
+            });
+          }
     }
+    
 })
 
+// search()
+document.forms.search.elements.search.addEventListener('input', search())
+
+
+
+//Задача № 2
+
+function UTCDate(){
+let now = new Date();
+let min = 12;
+let max = 18;
+    if(now.getHours()>min && now.getHours()<max){
+        console.log(now, "Не забудьте сделать перерыв и плотно пообедать - сейчас самое время (с 12:00 до 18:00)")
+    }
+    else {
+        console.log(now)
+    }
+}
+
+UTCDate()
