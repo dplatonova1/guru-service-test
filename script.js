@@ -85,34 +85,21 @@ function createMonthList(month_list) {
   }
 }
 
-function filterMonthList(month_name, parameter){ 
-    let month = monthes.filter(x => x[parameter] == month_name)[0]; //month это пачка данных одного месяца
-        //x[alias]=='jan'
-        //x[number]==inputvalue.includes or has
-    let filtered = month.number_list; //filtered это элементы намбер листа
-    return filtered;
+function filterMonthList(month_name, number) {
+  let month = monthes.filter((x) => x.alias == month_name)[0];
+  let filtered = month.number_list;
+  if (!!number) {
+    filtered = filtered.filter((x) => x.number == number);
+  }
+  return filtered;
 }
 
 function search() {
-    // Declare variables
-    var input, filter, ul, li, a, i, txtValue;
-    input = document.forms.search.elements.search;
-    filter = input.value.toUpperCase();
-    // ul = document.querySelector("container");
-    li = container.querySelectorAll('.row');
-    console.log(document.forms.search.elements.search.textContent)
-  
-    // Loop through all list items, and hide those who don't match the search query
-    for (i = 0; i < li.length; i++) {
-        console.log(li[i])
-      a = li[i].getElementsByTagName("a")[0];
-      txtValue = a.textContent || a.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        li[i].style.display = "";
-      } else {
-        li[i].style.display = "none";
-      }
+   let input = document.forms.search.elements.search;
+    for(let i=0; i<monthes.length; i++){
+        itemListCreate(filterMonthList(monthes[i].alias, input.value));
     }
+    
   }
 
 
@@ -132,9 +119,10 @@ fetch('numbers.json')
 
 
 document.addEventListener('click', (ev)=>{
+    ev.preventDefault();
     if(ev.target.closest('button')){
         let month_name = ev.target.lastElementChild.textContent;
-        itemListCreate(filterMonthList(month_name, 'alias'));
+        itemListCreate(filterMonthList(month_name, 0));
         let btns = ev.target.parentNode.children;
 
         for (var i = 0; i < btns.length; i++) {
@@ -151,7 +139,10 @@ document.addEventListener('click', (ev)=>{
 })
 
 // search()
-document.forms.search.elements.search.addEventListener('input', search())
+document.forms.search.elements.search.addEventListener('input', (event)=>{
+    event.preventDefault();
+    search()
+})
 
 
 
