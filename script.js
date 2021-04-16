@@ -2,6 +2,7 @@ const container = document.querySelector('.container');
 const header = document.querySelector('.header');
 const searchInput = document.querySelector('.search__input');
 let monthes;
+let current_month;
 
 function convertDate(day){
     let date = new Date (day)
@@ -81,6 +82,7 @@ function createMonthList(month_list) {
     }
   });
   if(month_list.length > 0){
+    current_month = month_list[0].alias;
     itemListCreate(month_list[0].number_list);
   }
 }
@@ -96,10 +98,7 @@ function filterMonthList(month_name, number) {
 
 function search() {
    let input = document.forms.search.elements.search;
-    for(let i=0; i<monthes.length; i++){
-        itemListCreate(filterMonthList(monthes[i].alias, input.value));
-    }
-    
+        itemListCreate(filterMonthList(current_month, input.value));   
   }
 
 
@@ -122,6 +121,7 @@ document.addEventListener('click', (ev)=>{
     ev.preventDefault();
     if(ev.target.closest('button')){
         let month_name = ev.target.lastElementChild.textContent;
+        current_month=month_name;
         itemListCreate(filterMonthList(month_name, 0));
         let btns = ev.target.parentNode.children;
 
@@ -138,7 +138,6 @@ document.addEventListener('click', (ev)=>{
     
 })
 
-// search()
 document.forms.search.elements.search.addEventListener('input', (event)=>{
     event.preventDefault();
     search()
