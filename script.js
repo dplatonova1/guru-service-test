@@ -75,14 +75,15 @@ function monthCreate(item) {
 }
 
 function createMonthList(month_list) {
-    month_list.forEach((month) => {
+  month_list.forEach((month) => {
     if (month.is_visible) {
       const cardTemplate = monthCreate(month);
       header.appendChild(cardTemplate);
     }
   });
-  if(month_list.length > 0){
+  if (month_list.length > 0) {
     current_month = month_list[0].alias;
+    document.querySelector('.button').classList.add('active');
     itemListCreate(month_list[0].number_list);
   }
 }
